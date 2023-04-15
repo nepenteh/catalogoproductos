@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+<th:block th:replace="layout/layout :: head-basic"></th:block>
+<th:block th:replace="layout/layout :: bootstrap-css"></th:block>
+<th:block th:replace="layout/layout :: jquery-ui-css"></th:block>
+<th:block th:replace="layout/layout :: general-css"></th:block>
+</head>
+<body>
+	<nav th:replace="layout/layout :: menu"></nav>
+	<div th:replace="layout/layout :: screen-title"></div>
+	<div th:replace="layout/layout :: messages-zone"></div>
+
+	<div class="container py-1">
+
+		<div class="row justify-content-center mt-3 ms-1 me-1">
+			<div class="col-12 formclass create-form shadow">
+				<form class="mt-3" th:object="${producto}" method="post"
+					th:action="@{/productos/form}" enctype="multipart/form-data">
+
+					<div class="row g-3 align-items-center mb-3">
+	<div class="col-md-2">
+		<label for="codigo" class="form-label mb-0 fw-bold">Codigo: </label>
+	</div>
+	<div class="col-md-4 mt-1 mt-md-3">
+		<input type="text" class="form-control form-control-sm" id="codigo"
+			th:field="*{codigo}">
+	</div>
+	<span class="text-danger" th:if="${#fields.hasErrors('codigo')}" th:uerrors="*{codigo}"></span>
+</div>
+<div class="row g-3 align-items-center mb-3">
+	<div class="col-md-2">
+		<label for="descripcion" class="form-label mb-0 fw-bold">Descripcion: </label>
+	</div>
+	<div class="col-md-4 mt-1 mt-md-3">
+		<input type="text" class="form-control form-control-sm" id="descripcion"
+			th:field="*{descripcion}">
+	</div>
+	<span class="text-danger" th:if="${#fields.hasErrors('descripcion')}" th:uerrors="*{descripcion}"></span>
+</div>
+<div class="row g-3 align-items-center mb-3">
+	<div class="col-md-2">
+		<label for="precio" class="form-label mb-0 fw-bold">Precio: </label>
+	</div>
+	<div class="col-md-4 mt-1 mt-md-3">
+		<input type="text" class="form-control form-control-sm" id="precio"
+			th:field="*{precio}">
+	</div>
+	<span class="text-danger" th:if="${#fields.hasErrors('precio')}" th:uerrors="*{precio}"></span>
+</div>
+<div class="row g-3 align-items-center mb-3">
+	<div class="col-md-2">
+		<label for="stock" class="form-label mb-0 fw-bold">Stock: </label>
+	</div>
+	<div class="col-md-4 mt-1 mt-md-3">
+		<input type="text" class="form-control form-control-sm" id="stock"
+			th:field="*{stock}">
+	</div>
+	<span class="text-danger" th:if="${#fields.hasErrors('stock')}" th:uerrors="*{stock}"></span>
+</div>
+<div class="row g-3 align-items-center mb-3">
+	<div class="col-md-2">
+		<label for="proveedor" class="form-label mb-0 fw-bold">Proveedor: </label>
+	</div>
+	<div class="col-md-4 mt-1 mt-md-3">
+		<input type="text" class="form-control form-control-sm" id="proveedor"
+			th:field="*{proveedor}">
+	</div>
+	<span class="text-danger" th:if="${#fields.hasErrors('proveedor')}" th:uerrors="*{proveedor}"></span>
+</div>
+<div class="row g-3 align-items-center mb-3">
+	<div class="col-md-2">
+		<label for="fechaCaducidad" class="form-label mb-0 fw-bold">FechaCaducidad: </label>
+	</div>
+	<div class="col-md-4 mt-1 mt-md-3">
+		<input type="date" class="form-control form-control-sm" id="fechaCaducidad"
+			th:field="*{fechaCaducidad}">
+	</div>
+	<span class="text-danger" th:if="${#fields.hasErrors('fechaCaducidad')}" th:uerrors="*{fechaCaducidad}"></span>
+</div>
+<div class="row g-3 align-items-center mb-3">
+	<div class="col-md-2">
+		<label for="image" class="form-label mb-0 fw-bold">Image: </label>
+	</div>
+						
+	<div class="col-md-4 mt-1 mt-md-3" > 
+		<div class="col-12 mt-1 mb-1" th:if="${producto.image != null}">
+			<div class="col-md-12 mt-1 mt-md-3"  id="imageImageDiv">
+				<table>
+					<tr><td>
+						<a th:href="@{'/productos/viewimg/'+${producto.id}+'/image'}" title="View Image">
+							<img th:if="${producto.image != null}" th:src="@{'/upload/' + ${producto.image}}" width="100px" class="border border-white shadow" id="imageImage"><br>
+						</a>
+						</td>
+						<td class="ps-2">
+							<a sec:authorize="hasRole('ROLE_ADMIN')" href="#" title="Delete Image" th:attr="onclick=|clearImageField('imageImage','imageImageText','imageImageDiv')|"><svg th:replace="layout/icons_svg :: svg-delete"></svg></a>
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+
+		<div class="col-12 mt-2">
+			<input class="form-control form-control-sm file" type="file" id="image" name="image_formname">
+			
+			<input type="hidden" class="form-control form-control-sm" id="imageImageText" name="imageImageText" th:value="${producto.image}">
+			<input type="hidden" class="form-control form-control-sm" id="imageImageTextOld" name="imageImageTextOld" th:value="${producto.image}">
+		</div>
+		</div>
+</div>
+
+
+					<div class="row g-3 align-items-center mb-3">
+						<div class="col-md-2 mt-4">
+							<input class="btn standard-button"
+								sec:authorize="hasRole('ROLE_ADMIN')" type="submit"
+								th:value="${#strings.equalsIgnoreCase(screen,'CREATE')?'Nuevo Producto':'Modificar Producto'}"> 
+							<input
+								sec:authorize="!hasRole('ROLE_ADMIN')" type="submit"
+								th:value="${#strings.equalsIgnoreCase(screen,'CREATE')?'Nuevo Producto':'Modificar Producto'}"  
+								disabled>
+						</div>
+					</div>
+
+				</form>
+			</div>
+		</div>
+
+	</div>
+
+	<div th:replace="layout/layout :: authorship"></div>
+
+	<div th:insert="layout/layout :: jquery-js"></div>
+	<div th:insert="layout/layout :: jquery-ui-js"></div>
+	<div th:insert="layout/layout :: bootstrap-js"></div>
+	
+	
+	
+	<script th:replace="layout/layout :: clear_imagefield"></script>
+	
+	
+</body>
+</html>
